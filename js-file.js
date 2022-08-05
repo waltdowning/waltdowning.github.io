@@ -83,6 +83,13 @@ function create ()
         repeat: -1
     });
 
+    this.anims.create({
+        key: 'up',
+        frames: this.anims.generateFrameNumbers('rocket', { start: 0, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
 
@@ -123,26 +130,24 @@ function update ()
     if (cursors.left.isDown && player.body.touching.down == false)
     {
         player.setVelocityX(-160);
-
-        player.anims.play('left', true);
     }
     else if (cursors.right.isDown && player.body.touching.down == false)
     {
         player.setVelocityX(160);
-
-        player.anims.play('right', true);
     }
     else
     {
         player.setVelocityX(0);
-
-        player.anims.play('turn');
     }
 
     if (cursors.up.isDown)
     {
         player.setVelocityY(-200);
-        player.anims.play('left', true);
+        player.anims.play('up', true);
+    }
+    else
+    {
+        player.anims.play('turn');
     }
 }
 
