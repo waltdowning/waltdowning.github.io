@@ -1,4 +1,6 @@
-
+/* 
+Adapted from http://phaser.io/tutorials/making-your-first-phaser-3-game
+*/
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -122,6 +124,8 @@ function create ()
 
 }
 
+// Option to turn the Fuel requirement on and off. Need to bind a key to toggle this before it will work.
+
 // function toggleFuel() {
 //     if (fuelOn == true) {
 //         fuelOn = false;
@@ -188,6 +192,8 @@ function collectRock (player, spacerock)
     }
     scoreText.setText('Score: ' + score);
 
+    // Option to end the game when a score is reached. Commented out so game continues indefinitely.
+    
     // if (score == 200) {
     //     winText = this.add.text(16, 100, 'You Win!', { fontSize: '64px', fill: '#ceb4ff' });
     //     gameOver = true;
