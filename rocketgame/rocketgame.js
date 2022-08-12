@@ -19,22 +19,22 @@ var config = {
 
 var player;
 var spacerocks;
-var bombs;
 var platforms;
 var cursors;
 var score = 0;
+let fuel = 100;
 var gameOver = false;
 var scoreText;
+var fuelOn = true;
 
 var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('sky', 'assets/sky-1.png');
-    this.load.image('ground', 'assets/platform-1.png');
-    this.load.image('spacerock', 'assets/spacerock.png');
-    this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('rocket', 'assets/rocket.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('sky', 'rocketgame/assets/sky-1.png');
+    this.load.image('ground', 'rocketgame/assets/platform-1.png');
+    this.load.image('spacerock', 'rocketgame/assets/spacerock.png');
+    this.load.spritesheet('rocket', 'rocketgame/assets/rocket.png', { frameWidth: 32, frameHeight: 48 });
 }
 
 function create ()
@@ -58,7 +58,7 @@ function create ()
     // The player and its settings
     player = this.physics.add.sprite(100, 460, 'rocket');
 
-    //  Player physics properties. Give the little guy a slight bounce.
+    //  Player physics properties.
     player.setBounce(.3);
     player.setCollideWorldBounds(true);
 
@@ -93,6 +93,7 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
 
+
     //  Some spacerocks to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     spacerocks = this.physics.add.group({
         key: 'spacerock',
@@ -108,8 +109,9 @@ function create ()
     });
 
 
-    //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ceb4ff' });
+    //  The score and fuel text
+    scoreText = this.add.text(16, 16, 'Score: 0', { fill: '#ceb4ff', font: 'bold 20pt Courier' });
+    fuelText = this.add.text(600,16, 'Fuel: ' + fuel, { fill: '#cf0b0b', font: 'bold 20pt Courier' })
 
     //  Collide the player and the spacerocks with the platforms
     this.physics.add.collider(player, platforms);
@@ -120,13 +122,27 @@ function create ()
 
 }
 
+// function toggleFuel() {
+//     if (fuelOn == true) {
+//         fuelOn = false;
+//         fuelText.setText('Unlimited Fuel');
+//     }
+//     else {
+//         fuelOn = true;
+//         fuelText.setText('Fuel: ' + fuel);
+//     }
+// }
+
+
 function update ()
 {
     if (gameOver)
     {
         return;
     }
-
+    if (fuel == 0) {
+        player.anims.play('turn');
+    }
     if (cursors.left.isDown && player.body.touching.down == false)
     {
         player.setVelocityX(-160);
@@ -142,8 +158,14 @@ function update ()
 
     if (cursors.up.isDown)
     {
+        if (fuel > 0 || fuelOn == false) {
         player.setVelocityY(-200);
         player.anims.play('up', true);
+        if (fuelOn == true) {
+            fuel -= 1;
+            fuelText.setText('Fuel: ' + fuel);
+        }
+        }
     }
     else
     {
@@ -157,6 +179,13 @@ function collectRock (player, spacerock)
 
     //  Add and update the score
     score += 10;
+    fuel += 25;
+    if (fuel >= 500) {
+        fuel = 500;
+    }
+    if (fuelOn == true) {
+        fuelText.setText('Fuel: ' + fuel);
+    }
     scoreText.setText('Score: ' + score);
 
     // if (score == 200) {
